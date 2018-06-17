@@ -3,12 +3,16 @@
 namespace DI\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * Advert
  *
  * @ORM\Table(name="advert")
  * @ORM\Entity(repositoryClass="DI\PlatformBundle\Repository\AdvertRepository")
+ * @UniqueEntity(fields="title", message="Une annonce existe déjà avec ce titre")
+
  */
 class Advert
 {
@@ -31,14 +35,14 @@ class Advert
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, unique=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="author", type="string", length=255)
+     * @ORM\Column(name="author", type="string", length=255,)
      */
     private $author;
 

@@ -1,0 +1,15 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+    Annonce - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{"Annonces"|trans}}</h1>
+    <hr>
+
+    <form action="" {{ path ( 'login') }}
+    {% block diplatform_body %}
+    {% endblock %}
+
+{% endblock %}

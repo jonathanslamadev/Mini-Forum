@@ -38,7 +38,7 @@ class DefaultController extends Controller
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', $page),
-            10/*limit per page*/
+            5/*limit per page*/
         );
 
         return $this->render('DIPlatformBundle:Advert:index.html.twig', array('pagination' => $pagination));

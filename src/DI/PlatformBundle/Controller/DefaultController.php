@@ -18,15 +18,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DefaultController extends Controller
 {
     public function indexAction($page, Request $request)
     {
 
+        /*
         if ($page < 1) {
             throw $this->createNotFoundException("La page ".$page." n'existe pas");
         }
+        */
 
         $query = $this->getDoctrine()
                             ->getManager()
@@ -44,6 +47,9 @@ class DefaultController extends Controller
         return $this->render('DIPlatformBundle:Advert:index.html.twig', array('pagination' => $pagination));
     }
 
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     */
     public function addAction(Request $request) {
 
         $advert = new Advert();
@@ -141,47 +147,6 @@ class DefaultController extends Controller
 
     public function deleteAction() {
         return $this->render('DIPlatformBundle:Advert:index.html.twig');
-    }
-
-    public function totoAction(Request $request) {
-
-        $user = new User();
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $user);
-        $formBuilder
-            ->add('nom', TextType::class)
-            ->add('prenom', textType::class)
-            ->add('email', TextType::class)
-            ->add('save', SubmitType::class);
-
-        $form = $formBuilder->getForm();
-
-
-        if ($request->isMethod('POST')) {
-
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
-
-                $translator = $this->get('translator');
-                $messagesuccess = $translator->trans('Votre utilisateur a bien été enregistrée');
-                $this->addFlash('success', $messagesuccess);
-            }
-
-        }
-
-        $users = $this->getDoctrine()->getManager()->getRepository('DIPlatformBundle:User')->findAll();
-
-        return $this->render('DIPlatformBundle:David:toto.html.twig',
-            array('formulaire' => $form->createView(), 'users' => $users));
-    }
-
-    public function detailuserAction($id) {
-        $user = $this->getDoctrine()->getManager()->getRepository('DIPlatformBundle:User')->find($id);
-        return $this->render('DIPlatformBundle:David:detailuser.html.twig',
-            array('user' => $user));
     }
 
 }

@@ -13,21 +13,30 @@ security:
         # On garde ce rôle superadmin, il nous resservira par la suite
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
+
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
-    providers:
-        in_memory:
-            #memory: ~
-            memory:
-                users:
-                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+    #providers:
+     #   in_memory:
+    #      memory:
+     #           users:
+      #              user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+       #             admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+
+        main:
+            entity:
+                class: DI\UserBundle\Entity\User
+                property: username
+
 
     firewalls:
+
         # On crée un pare-feu uniquement pour le formulaire
         main_login:
             # Cette expression régulière permet de prendre /login (mais pas /login_check !)
             pattern:   ^/login$
             anonymous: true # On autorise alors les anonymes sur ce pare-feu
+            provider: main
+
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
@@ -40,9 +49,11 @@ security:
             form_login:
                 login_path: login
                 check_path: login_check
+                default_target_path: di_platform_homepage
             logout:
                 path:       logout
                 target:     login
+
             #anonymous: ~
             # activate different ways to authenticate
 
@@ -51,5 +62,7 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
-    access_control:
+
+#    access_control:
+#        - { path: ^/admin, ip: 127.0.0.1, requires_channel: https }
 

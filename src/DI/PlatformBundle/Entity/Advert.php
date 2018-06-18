@@ -3,8 +3,8 @@
 namespace DI\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * Advert
@@ -12,7 +12,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="advert")
  * @ORM\Entity(repositoryClass="DI\PlatformBundle\Repository\AdvertRepository")
  * @UniqueEntity(fields="title", message="Une annonce existe déjà avec ce titre")
-
  */
 class Advert
 {
@@ -29,20 +28,24 @@ class Advert
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     * @Assert\DateTime()
      */
     private $date;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255, unique=true)
+     * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\Length(min=10, minMessage="Le titre doit faire au moins {{ limit }} caractères.")
+     *
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="author", type="string", length=255,)
+     * @ORM\Column(name="author", type="string", length=255)
+     * @Assert\Length(min=2, minMessage="Un auteur doit avoir au moins{{ limit }} caractères.")
      */
     private $author;
 
@@ -50,11 +53,13 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="content", type="text")
+     * @Assert\NotBlank()
      */
     private $content;
 
     /**
     * @ORM\OneToOne(targetEntity="DI\PlatformBundle\Entity\Image", cascade={"persist"})
+    * @Assert\Valid()
     */
     private $image;
 

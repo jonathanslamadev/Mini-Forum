@@ -6,18 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class SecurityController extends Controller
 {
-    public function indexAction()
-    {
-        return $this->render('DIUserBundle:Default:index.html.twig');
-    }
 
-    public function loginAction(){
+    public function loginAction() {
 
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('di_platform_homepage');
         }
 
-            return $this->render('DIUserBundle:Default:login.html.twig');
+        $authentificationUtils = $this->get('security.authentication_utils');
+
+        return $this->render('DIUserBundle:Default:login.html.twig', array(
+            'last_username' => $authentificationUtils->getLastUsername(),
+            'error' => $authentificationUtils->getLastAuthenticationError()
+        ));
+
     }
 
 }

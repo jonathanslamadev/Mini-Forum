@@ -41,7 +41,7 @@ class DefaultController extends Controller
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', $page),
-            5/*limit per page*/
+            10/*limit per page*/
         );
 
         return $this->render('DIPlatformBundle:Advert:index.html.twig', array('pagination' => $pagination));
@@ -87,11 +87,11 @@ class DefaultController extends Controller
         );
     }
 
-    public function viewAction($id) {
+    public function viewAction(Advert $advert) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $advert = $em->getRepository('DIPlatformBundle:Advert')->find($id);
+        //$advert = $em->getRepository('DIPlatformBundle:Advert')->find($id);
         $list_applications = $em->getRepository('DIPlatformBundle:Application')->findByAdvert($advert);
 
         //$list_adverts = $em->getRepository('DIPlatformBundle:Advert')->getAdvertWithApplications($id);
@@ -145,8 +145,13 @@ class DefaultController extends Controller
                 'list_categories'=>$list_categories, 'formulaire' => $form->createView()));
     }
 
-    public function deleteAction() {
-        return $this->render('DIPlatformBundle:Advert:index.html.twig');
+    public function deleteAction(Advert $advert) {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($advert);
+        $em->flush();
+        $this->addFlash('success', 'Annonce supprimmee avec succes');
+        return $this->redirectToRoute('di_platform_homepage');
     }
+
 
 }
